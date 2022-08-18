@@ -1,6 +1,5 @@
 import { FC } from 'react'
 
-import Layout from '@/components/layout/Layout'
 import Heading from '@/components/ui/heading/Heading'
 
 import { Meta } from '@/utils/meta/Meta'

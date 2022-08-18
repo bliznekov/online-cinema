@@ -13,16 +13,20 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@reduxjs/toolkit": "^1.8.4",
         "@tailwindcss/aspect-ratio": "^0.4.0",
         "@tailwindcss/forms": "^0.5.2",
         "axios": "^0.27.2",
         "classnames": "^2.3.1",
         "next": "12.2.3",
+        "nextjs-progressbar": "^0.0.14",
         "react": "18.2.0",
         "react-dom": "18.2.0",
         "react-icons": "^4.4.0",
         "react-loading-skeleton": "^3.1.0",
         "react-query": "^3.39.2",
+        "react-redux": "^8.0.2",
+        "react-redux-toastr": "^7.6.9",
         "sass": "^1.54.1"
     },
     "devDependencies": {
@@ -30,6 +34,7 @@
         "@types/node": "18.6.3",
         "@types/react": "18.0.15",
         "@types/react-dom": "18.0.6",
+        "@types/react-redux-toastr": "^7.6.2",
         "autoprefixer": "^10.4.8",
         "eslint": "8.21.0",
         "eslint-config-next": "12.2.3",
