@@ -1,18 +1,30 @@
+import dynamic from 'next/dynamic'
 import { FC } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
+import { stripHtml } from 'string-strip-html'
 
-import formStyles from '@/components/shared/admin/adminForm.module.scss'
+import SlugField from '@/components/ui/form-elements/SlugField/SlugField'
+import TextEditor from '@/components/ui/form-elements/TextEditor'
 import SkeletonLoader from '@/components/ui/skeleton-loader/SkeletonLoader'
 
 import AdminNavigation from '@/ui/admin-navigation/AdminNavigation'
 import Button from '@/ui/form-elements/Button'
 import Field from '@/ui/form-elements/Field'
+import formStyles from '@/ui/form-elements/adminForm.module.scss'
 import Heading from '@/ui/heading/Heading'
 
 import { Meta } from '@/utils/meta/Meta'
+import generateSlug from '@/utils/string/generateSlug'
 
 import { IGenreEditInput } from './genre-edit.interface'
 import { useGenreEdit } from './useGenreEdit'
+
+const DynamicTextEditor = dynamic(
+	() => import('@/ui/form-elements/TextEditor'),
+	{
+		ssr: false,
+	}
+)
 
 const GenreEdit: FC = () => {
 	const {
@@ -21,6 +33,7 @@ const GenreEdit: FC = () => {
 		formState: { errors },
 		setValue,
 		getValues,
+		control,
 	} = useForm<IGenreEditInput>({
 		mode: 'onChange',
 	})
@@ -46,7 +59,15 @@ const GenreEdit: FC = () => {
 								style={{ width: '31%' }}
 							/>
 
-							<div style={{ width: '31%' }}>{/* Slug Field */}</div>
+							<div style={{ width: '31%' }}>
+								<SlugField
+									generate={() =>
+										setValue('slug', generateSlug(getValues('name')))
+									}
+									register={register}
+									error={errors.slug}
+								/>
+							</div>
 
 							<Field
 								{...register('icon', {
@@ -57,6 +78,30 @@ const GenreEdit: FC = () => {
 								style={{ width: '31%' }}
 							/>
 						</div>
+
+						<Controller
+							name="description"
+							control={control}
+							defaultValue=""
+							render={({
+								field: { value, onChange },
+								fieldState: { error },
+							}) => (
+								<DynamicTextEditor
+									placeholder="Description"
+									onChange={onChange}
+									error={error}
+									value={value}
+								/>
+							)}
+							rules={{
+								validate: {
+									required: (v) =>
+										(v && stripHtml(v).result.length > 0) ||
+										'Description is required!',
+								},
+							}}
+						/>
 						<Button>Update</Button>
 					</>
 				)}
