@@ -2,12 +2,13 @@ import dynamic from 'next/dynamic'
 import { FC } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
-import formStyles from '@/components/shared/admin/adminForm.module.scss'
+import UploadField from '@/components/ui/form-elements/UploadField/UploadField'
 
 import AdminNavigation from '@/ui/admin-navigation/AdminNavigation'
 import Button from '@/ui/form-elements/Button'
 import Field from '@/ui/form-elements/Field'
 import SlugField from '@/ui/form-elements/SlugField/SlugField'
+import formStyles from '@/ui/form-elements/adminForm.module.scss'
 import Heading from '@/ui/heading/Heading'
 import SkeletonLoader from '@/ui/skeleton-loader/SkeletonLoader'
 
@@ -18,6 +19,10 @@ import { IMovieEditInput } from './movie-edit.interface'
 import { useAdminActors } from './useAdminActors'
 import { useAdminGenres } from './useAdminGenres'
 import { useMovieEdit } from './useMovieEdit'
+
+const DynamicSelect = dynamic(() => import('@/ui/select/Select'), {
+	ssr: false,
+})
 
 const MovieEdit: FC = () => {
 	const {
@@ -83,14 +88,21 @@ const MovieEdit: FC = () => {
 							style={{ width: '31%' }}
 						/>
 
-						{/* <Controller
+						<Controller
 							name="genres"
 							control={control}
 							rules={{
 								required: 'Please select at least one genre!',
 							}}
 							render={({ field, fieldState: { error } }) => (
-								
+								<DynamicSelect
+									error={error}
+									field={field}
+									placeholder="Genres"
+									options={genres || []}
+									isLoading={isGenresLoading}
+									isMulti
+								/>
 							)}
 						/>
 						<Controller
@@ -174,7 +186,7 @@ const MovieEdit: FC = () => {
 							rules={{
 								required: 'Video is required!',
 							}}
-						/> */}
+						/>
 					</div>
 
 					<Button>Update</Button>
