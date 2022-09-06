@@ -11,8 +11,8 @@ import { MovieModel } from './movie.model'
 export class MovieService {
 	constructor(
 		@InjectModel(MovieModel) private readonly movieModel: ModelType<MovieModel>,
-		private readonly telegramService: TelegramService,
-	) {}
+	) // private readonly telegramService: TelegramService,
+	{}
 
 	async getAll(searchTerm?: string) {
 		let options = {}
@@ -74,10 +74,10 @@ export class MovieService {
 	}
 
 	async update(id: string, dto: CreateMovieDto) {
-		if (!dto.isSendTelegram) {
-			await this.sendNotifications(dto)
-			dto.isSendTelegram = true
-		}
+		// if (!dto.isSendTelegram) {
+		// 	await this.sendNotifications(dto)
+		// 	dto.isSendTelegram = true
+		// }
 
 		return this.movieModel.findByIdAndUpdate(id, dto, { new: true }).exec()
 	}
@@ -100,23 +100,23 @@ export class MovieService {
 			.exec()
 	}
 
-	async sendNotifications(dto: CreateMovieDto) {
-		if (process.env.NODE_ENV !== 'development')
-			await this.telegramService.sendPhoto(dto.poster)
+	// async sendNotifications(dto: CreateMovieDto) {
+	// 	if (process.env.NODE_ENV !== 'development')
+	// 		await this.telegramService.sendPhoto(dto.poster)
 
-		const msg = `<b>${dto.title}</b>`
+	// 	const msg = `<b>${dto.title}</b>`
 
-		await this.telegramService.sendMessage(msg, {
-			reply_markup: {
-				inline_keyboard: [
-					[
-						{
-							url: 'https://okko.tv/movie/free-guy',
-							text: '🍿 Go to watch',
-						},
-					],
-				],
-			},
-		})
-	}
+	// 	await this.telegramService.sendMessage(msg, {
+	// 		reply_markup: {
+	// 			inline_keyboard: [
+	// 				[
+	// 					{
+	// 						url: 'https://okko.tv/movie/free-guy',
+	// 						text: '🍿 Go to watch',
+	// 					},
+	// 				],
+	// 			],
+	// 		},
+	// 	})
+	// }
 }
